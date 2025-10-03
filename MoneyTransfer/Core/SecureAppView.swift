@@ -28,7 +28,7 @@ struct SecureAppView: View {
                     },
                     onExit: {
                         // In a real app, you might want to call exit(0) or show a different screen
-                        logManager?.trackEvent(event: SecurityManager.Event.securityThreatDetected(
+                        logManager.trackEvent(event: SecurityManager.Event.securityThreatDetected(
                             threat: .criticalThreat
                         ))
                         // For now, we'll just keep showing the security gate

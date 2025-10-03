@@ -74,7 +74,7 @@ class SecurityManager {
         }
     }
     
-    enum SecurityWarning: String, CaseIterable {
+    enum SecurityWarning: String, CaseIterable, Codable {
         case jailbroken = "Device is jailbroken"
         case debuggerAttached = "Debugger is attached"
         case reverseEngineered = "App may be reverse engineered"
@@ -156,7 +156,7 @@ class SecurityManager {
     }
     
     private func checkDebuggerAttachment() {
-        isDebuggerAttached = IOSSecuritySuite.amIBeingDebugged()
+        isDebuggerAttached = IOSSecuritySuite.amIDebugged()
         
         if isDebuggerAttached {
             securityWarnings.append(.debuggerAttached)
@@ -186,12 +186,9 @@ class SecurityManager {
     }
     
     private func checkAppIntegrity() {
-        // Check if the app has been tampered with
-        isTampered = IOSSecuritySuite.amITampered([
-            .bundleID("com.michalkoks.MoneyTransfer"),
-            .mobileProvision("your-mobile-provision-sha256-hash"), // Replace with actual hash
-            .machO("your-macho-hash") // Replace with actual hash
-        ]).result
+        // Basic tampering check with bundle ID
+        let tamperingResult = IOSSecuritySuite.amITampered([.bundleID("com.michalkoks.MoneyTransfer")])
+        isTampered = tamperingResult.result
         
         if isTampered {
             securityWarnings.append(.tampered)
@@ -208,16 +205,36 @@ class SecurityManager {
     }
     
     private func checkAdditionalIntegrityMeasures() -> Bool {
-        // Check for suspicious runtime modifications
-        let suspiciousLibraries = [
+        // Check for suspicious frameworks/libraries in the app bundle
+        let suspiciousFrameworks = [
             "FridaGadget",
-            "frida",
-            "cynject",
+            "cynject", 
             "libcycript"
         ]
         
-        for library in suspiciousLibraries {
-            if IOSSecuritySuite.amIRuntimeManipulated() {
+        for framework in suspiciousFrameworks {
+            if Bundle.main.path(forResource: framework, ofType: nil) != nil {
+                return true
+            }
+        }
+        
+        // Check for suspicious environment variables that might indicate runtime manipulation
+        let suspiciousEnvVars = ["DYLD_INSERT_LIBRARIES", "FRIDA_AGENT_PATH"]
+        for envVar in suspiciousEnvVars {
+            if ProcessInfo.processInfo.environment[envVar] != nil {
+                return true
+            }
+        }
+        
+        // Check for common debugging/analysis tools
+        let suspiciousPaths = [
+            "/usr/bin/frida-server",
+            "/usr/local/bin/frida",
+            "/var/lib/frida"
+        ]
+        
+        for path in suspiciousPaths {
+            if FileManager.default.fileExists(atPath: path) {
                 return true
             }
         }
