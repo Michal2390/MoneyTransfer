@@ -14,9 +14,10 @@ struct MoneyTransferApp: App {
     
     var body: some Scene {
         WindowGroup {
-            AppView()
+            SecureAppView()
                 .environment(delegate.dependencies.currencyManager)
                 .environment(delegate.dependencies.logManager)
+                .environment(delegate.dependencies.securityManager)
         }
     }
 }
@@ -49,6 +50,7 @@ enum BuildConfiguration {
 struct Dependencies {
     let currencyManager: CurrencyManager
     let logManager: LogManager
+    let securityManager: SecurityManager
     
     init(config: BuildConfiguration) {
         switch config {
@@ -56,20 +58,27 @@ struct Dependencies {
             logManager = LogManager(services: [
                 ConsoleService(printParameters: true)
             ])
+            securityManager = SecurityManager(logManager: logManager)
             currencyManager = CurrencyManager(service: MockCurrencyService(), logManager: logManager)
         case .dev, .prod:
             logManager = LogManager(services: [
                 ConsoleService(printParameters: true)
             ])
+            securityManager = SecurityManager(logManager: logManager)
             currencyManager = CurrencyManager(service: TransferGoCurrencyService(), logManager: logManager)
         }
+        
+        // Perform security checks on initialization
+        securityManager.performSecurityChecks()
     }
 }
 
 extension View {
     func previewEnvironment() -> some View {
+        let logManager = LogManager(services: [])
         self
             .environment(CurrencyManager(service: MockCurrencyService()))
-            .environment(LogManager(services: []))
+            .environment(logManager)
+            .environment(SecurityManager(logManager: logManager))
     }
 }

@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		865DC9262E8FB9F500B3C857 /* IOSSecuritySuite in Frameworks */ = {isa = PBXBuildFile; productRef = 865DC9252E8FB9F500B3C857 /* IOSSecuritySuite */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		867C4FD12E8E5F160008AD1A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				865DC9262E8FB9F500B3C857 /* IOSSecuritySuite in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = MoneyTransfer;
 			packageProductDependencies = (
+				865DC9252E8FB9F500B3C857 /* IOSSecuritySuite */,
 			);
 			productName = MoneyTransfer;
 			productReference = 867C4FC32E8E5F140008AD1A /* MoneyTransfer.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = 867C4FBA2E8E5F140008AD1A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				865DC9242E8FB9F500B3C857 /* XCRemoteSwiftPackageReference "IOSSecuritySuite" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 867C4FC42E8E5F140008AD1A /* Products */;
 			projectDirPath = "";
@@ -578,6 +587,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		865DC9242E8FB9F500B3C857 /* XCRemoteSwiftPackageReference "IOSSecuritySuite" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/securing/IOSSecuritySuite.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		865DC9252E8FB9F500B3C857 /* IOSSecuritySuite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 865DC9242E8FB9F500B3C857 /* XCRemoteSwiftPackageReference "IOSSecuritySuite" */;
+			productName = IOSSecuritySuite;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 867C4FBB2E8E5F140008AD1A /* Project object */;
 }
