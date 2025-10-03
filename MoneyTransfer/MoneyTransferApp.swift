@@ -76,7 +76,7 @@ struct Dependencies {
 extension View {
     func previewEnvironment() -> some View {
         let logManager = LogManager(services: [])
-        self
+        return self
             .environment(CurrencyManager(service: MockCurrencyService()))
             .environment(logManager)
             .environment(SecurityManager(logManager: logManager))
